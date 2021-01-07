@@ -2,7 +2,6 @@ from dj_proposals_candidates.models import Territory, Proposal, Candidate, Commi
 import numpy as np
 
 def dummy_representation(proposal):
-    print(proposal.title)
     return np.zeros(1)
 
 def process_proposals_from_data(data, url, get_representation_function=dummy_representation):
