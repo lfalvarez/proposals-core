@@ -5,6 +5,7 @@ from django.db import models
 from model_utils.models import TimeStampedModel
 from autoslug import AutoSlugField
 from ndarray import NDArrayField
+import numpy as np
 
 class NamedAndDescripted(models.Model):
     name = models.CharField(max_length=255)
@@ -18,7 +19,7 @@ class NamedAndDescripted(models.Model):
         abstract = True
 
 class Territory(NamedAndDescripted, TimeStampedModel):
-    pass
+    remote_id = models.IntegerField()
 
 
 class Candidate(NamedAndDescripted, TimeStampedModel):
@@ -26,11 +27,13 @@ class Candidate(NamedAndDescripted, TimeStampedModel):
     coalition = models.ForeignKey('Coalition', related_name='candidates', null=True, blank=True, on_delete=models.CASCADE)
     
 class Proposal(TimeStampedModel):
+    remote_id = models.IntegerField()
     title = models.CharField(max_length=255)
     slug = AutoSlugField(populate_from='title')
     territory = models.ForeignKey(Territory, related_name='proposals', on_delete=models.CASCADE)
     description = models.TextField()
-    representation = NDArrayField()
+    representation = NDArrayField(default=np.zeros(5))
+    votes = models.IntegerField()
     
     def __str__(self):
         return self.title
