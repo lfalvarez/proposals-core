@@ -23,8 +23,12 @@ class Territory(NamedAndDescripted, TimeStampedModel):
 
 
 class Candidate(NamedAndDescripted, TimeStampedModel):
+    profile_path = models.CharField(max_length=255)
     party = models.ForeignKey('Party', related_name='candidates', null=True, blank=True, on_delete=models.CASCADE)
     coalition = models.ForeignKey('Coalition', related_name='candidates', null=True, blank=True, on_delete=models.CASCADE)
+    img_url = models.CharField(max_length=255)
+    nickname = models.CharField(max_length=255)
+    territory = models.ForeignKey(Territory, related_name='candidates', null=True, blank=True, on_delete=models.CASCADE)
     
 class Proposal(TimeStampedModel):
     remote_id = models.IntegerField()
@@ -42,6 +46,11 @@ class Proposal(TimeStampedModel):
 class Commitment(TimeStampedModel):
     candidate = models.ForeignKey(Candidate, related_name='commitments', on_delete=models.CASCADE)
     proposal = models.ForeignKey(Proposal, related_name='commitments', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '{candidate} con {proposal} en {territory}'.format(candidate=self.candidate.name,
+                                                                  proposal=self.proposal.title,
+                                                                  territory=self.candidate.territory.name)
     
 
 class Party(NamedAndDescripted, TimeStampedModel):
