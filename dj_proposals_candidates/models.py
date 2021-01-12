@@ -36,7 +36,7 @@ class Proposal(TimeStampedModel):
     slug = AutoSlugField(populate_from='title')
     territory = models.ForeignKey(Territory, related_name='proposals', on_delete=models.CASCADE)
     description = models.TextField()
-    representation = NDArrayField(default=np.zeros(5))
+    representation = models.BinaryField(default=None, null=True, blank=True)
     votes = models.IntegerField()
     
     def __str__(self):
