@@ -36,12 +36,6 @@ query = """
                 nickname
                 name
               }
-              author {
-                profilePath
-                avatarUrl
-                nickname
-                name
-              }
             }
           }
         }
