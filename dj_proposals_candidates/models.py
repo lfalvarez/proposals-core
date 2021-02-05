@@ -29,6 +29,7 @@ class Candidate(NamedAndDescripted, TimeStampedModel):
     img_url = models.CharField(max_length=255)
     nickname = models.CharField(max_length=255)
     territory = models.ForeignKey(Territory, related_name='candidates', null=True, blank=True, on_delete=models.CASCADE)
+    email = models.EmailField()
     
 class Proposal(TimeStampedModel):
     remote_id = models.IntegerField()
