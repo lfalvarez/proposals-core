@@ -5,7 +5,6 @@ from dj_proposals_candidates.create_proposals_from_data import process_proposals
 
 query = """
 {
-
   assemblies {
     id
     title {
@@ -26,6 +25,14 @@ query = """
           edges {
             node {
               id
+              scope {
+                id
+                name {
+                  translations {
+                    text
+                  }
+                }
+              }
               title
               state
               body

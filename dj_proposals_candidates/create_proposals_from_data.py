@@ -6,15 +6,20 @@ def dummy_representation(proposal):
     return np.zeros(1)
 
 
+def get_terrytory_from_proposal_dict(scope):
+    remote_territory_id = scope['id']
+    territory_name = scope['name']['translations'][0]['text']
+    exists_territory = Territory.objects.filter(remote_id=remote_territory_id).exists()
+    if not exists_territory:
+        territory = Territory.objects.create(remote_id=remote_territory_id, name=territory_name)
+    else:
+        territory = Territory.objects.get(remote_id=remote_territory_id)
+    return territory
+
+
 def process_proposals_from_data(data, url, get_representation_function=dummy_representation):
     for assembly in data['data']['assemblies']:
-        territory_id = assembly['id']
-        territory_name = assembly['title']['translations'][0]['text']
-        exists_territory = Territory.objects.filter(remote_id=territory_id).exists()
-        if not exists_territory:
-            territory = Territory.objects.create(remote_id=territory_id, name=territory_name)
-        else:
-            territory = Territory.objects.get(remote_id=territory_id)
+        assembly_id = assembly['id']
         proposals_component = next(
             filter(lambda component: component['__typename'] == 'Proposals', assembly['components']), None)
         if proposals_component:
@@ -22,11 +27,12 @@ def process_proposals_from_data(data, url, get_representation_function=dummy_rep
             proposals_component_id = proposals_component['id']
             for p_dict in proposals:
                 proposal_dict = p_dict['node']
+                territory = get_terrytory_from_proposal_dict(proposal_dict['scope'])
                 proposal_id = proposal_dict['id']
                 proposal_exists = Proposal.objects.filter(remote_id=proposal_id).exists()
                 if not proposal_exists:
                     remote_url = '/assemblies/{territory_id}/f/{proposals_component_id}/proposals/{proposal_id}'
-                    remote_url = remote_url.format(territory_id=territory_id,
+                    remote_url = remote_url.format(territory_id=assembly_id,
                                                    proposals_component_id=proposals_component_id,
                                                    proposal_id=proposal_id)
                     remote_url = url + remote_url

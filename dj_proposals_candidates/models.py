@@ -4,8 +4,6 @@ from django.db import models
 
 from model_utils.models import TimeStampedModel
 from autoslug import AutoSlugField
-from ndarray import NDArrayField
-import numpy as np
 
 class NamedAndDescripted(models.Model):
     name = models.CharField(max_length=255)
