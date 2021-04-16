@@ -18,6 +18,7 @@ class NamedAndDescripted(models.Model):
 
 class Territory(NamedAndDescripted, TimeStampedModel):
     remote_id = models.IntegerField()
+    is_country = models.BooleanField(default=False)
 
 
 class Candidate(NamedAndDescripted, TimeStampedModel):
